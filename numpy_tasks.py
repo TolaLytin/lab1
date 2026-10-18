@@ -101,7 +101,3 @@ def one_hot(labels: np.ndarray, class_count: Optional[int] = None) -> np.ndarray
     result = np.zeros((len(labels), class_count), dtype=int)
     result[np.arange(len(labels)), labels] = 1
     return result
-
-if __name__ == "__main__":
-    print("Тест 2 (бинаризация):\n", binarize(np.array([[1, 5], [3, 2]]), 2))
-    print("Тест 5 (шахматы):\n", chess(3, 4, 0, 1))
