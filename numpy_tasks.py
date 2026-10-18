@@ -20,37 +20,29 @@ class TimeSeriesStatistics:
     local_min_indices: np.ndarray
     moving_average: np.ndarray
 
-
 def sum_prod(matrices: list[np.ndarray], vectors: list[np.ndarray]) -> np.ndarray:
     result = np.zeros_like(vectors[0], dtype=np.float64)
     for A, x in zip(matrices, vectors):
         result += A @ x
     return result
 
-
 def binarize(M: np.ndarray, threshold: float) -> np.ndarray:
     return (M > threshold).astype(int)
-
 
 def unique_rows(M: np.ndarray) -> list[np.ndarray]:
     return [np.unique(row) for row in M]
 
-
 def unique_columns(M: np.ndarray) -> list[np.ndarray]:
     return [np.unique(col) for col in M.T]
-
 
 def matrix_statistics(m: int, n: int, mean: float, std: float, seed: Optional[int] = None) -> MatrixStatistics:
     rng = np.random.default_rng(seed)
     matrix = rng.normal(loc=mean, scale=std, size=(m, n))
-    
     row_means = np.mean(matrix, axis=1)
     col_means = np.mean(matrix, axis=0)
     row_vars = np.var(matrix, axis=1)
     col_vars = np.var(matrix, axis=0)
-    
     return MatrixStatistics(matrix, row_means, col_means, row_vars, col_vars)
-
 
 def plot_histograms(stats: MatrixStatistics):
     fig, axes = plt.subplots(2, 1, figsize=(10, 8))
@@ -63,12 +55,10 @@ def plot_histograms(stats: MatrixStatistics):
     plt.tight_layout()
     plt.show()
 
-
 def chess(m: int, n: int, a: int, b: int) -> np.ndarray:
     i, j = np.ogrid[:m, :n]
     mask = (i + j) % 2 == 0
     return np.where(mask, a, b)
-
 
 def draw_rectangle(m: int, n: int, width: int, height: int, bg_color: tuple, rect_color: tuple) -> np.ndarray:
     img = np.full((m, n, 3), bg_color, dtype=np.uint8)
@@ -80,7 +70,6 @@ def draw_rectangle(m: int, n: int, width: int, height: int, bg_color: tuple, rec
     img[x_start:x_end, y_start:y_end] = rect_color
     return img
 
-
 def draw_ellipse(m: int, n: int, a: int, b: int, bg_color: tuple, ellipse_color: tuple) -> np.ndarray:
     img = np.full((m, n, 3), bg_color, dtype=np.uint8)
     x0, y0 = m // 2, n // 2
@@ -89,28 +78,22 @@ def draw_ellipse(m: int, n: int, a: int, b: int, bg_color: tuple, ellipse_color:
     img[mask] = ellipse_color
     return img
 
-
 def analyze_time_series(series: np.ndarray, p: int) -> TimeSeriesStatistics:
     mean = np.mean(series)
     variance = np.var(series)
     std = np.std(series)
-    
     local_max_indices = []
     local_min_indices = []
-    
     for i in range(1, len(series) - 1):
         if series[i] > series[i - 1] and series[i] > series[i + 1]:
             local_max_indices.append(i)
         if series[i] < series[i - 1] and series[i] < series[i + 1]:
             local_min_indices.append(i)
-            
     if p > 0:
         moving_average = np.convolve(series, np.ones(p)/p, mode='valid')
     else:
         moving_average = np.array([])
-        
     return TimeSeriesStatistics(mean, variance, std, np.array(local_max_indices), np.array(local_min_indices), moving_average)
-
 
 def one_hot(labels: np.ndarray, class_count: Optional[int] = None) -> np.ndarray:
     if class_count is None:
@@ -120,7 +103,5 @@ def one_hot(labels: np.ndarray, class_count: Optional[int] = None) -> np.ndarray
     return result
 
 if __name__ == "__main__":
-    print("Тест 1 (сумма векторов):\n", sum_prod([np.array([[1, 0], [0, 1]])], [np.array([[5], [5]])]))
     print("Тест 2 (бинаризация):\n", binarize(np.array([[1, 5], [3, 2]]), 2))
     print("Тест 5 (шахматы):\n", chess(3, 4, 0, 1))
-    print("Тест 8 (one-hot):\n", one_hot(np.array([0, 2, 3, 0])))
