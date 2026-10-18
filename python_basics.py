@@ -67,8 +67,3 @@ def is_balanced_number(n: int) -> bool:
     sum_left = sum(int(c) for c in left_part)
     sum_right = sum(int(c) for c in right_part)
     return sum_left == sum_right
-
-if __name__ == "__main__":
-    print("Тест 1 (гласные):", count_vowels("Hello World"))
-    print("Тест 4 (устойчивость):", multiplicative_persistence(39))
-    print("Тест 6 (множители):", prime_factorization(86240))
